@@ -42,7 +42,9 @@ router.post("/auth/login", async (req, res): Promise<void> => {
     const normalizedUsername = admin?.username ?? supabaseUser?.email ?? username;
     const displayName =
       admin?.full_name ||
-      (typeof supabaseUser.user_metadata?.full_name === "string" ? supabaseUser.user_metadata.full_name : null) ||
+      (typeof supabaseUser?.user_metadata?.full_name === "string"
+        ? supabaseUser.user_metadata.full_name
+        : null) ||
       normalizedUsername;
 
     res.json({

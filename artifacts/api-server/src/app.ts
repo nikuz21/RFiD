@@ -1,21 +1,21 @@
-import express, { type Express } from "express";
+import express, { type Express, type Request, type Response } from "express";
 import cors from "cors";
-import * as pinoHttp from "pino-http";
+import { pinoHttp } from "pino-http"; // Isang import lang dapat
 import router from "./routes";
-import { logger } from "./lib/logger";
+import { logger as baseLogger } from "./lib/logger"; // I-rename para hindi mag-conflict sa middleware
 
 const app: Express = express();
 
+// Gamitin ang pinoHttp middleware nang tama
 app.use(
   pinoHttp({
-    logger,
+    logger: baseLogger,
     serializers: {
-      req: (req) => ({
-        id: req.id,
+      req: (req: Request) => ({
         method: req.method,
         url: req.url?.split("?")[0],
       }),
-      res: (res) => ({
+      res: (res: Response) => ({
         statusCode: res.statusCode,
       }),
     },
@@ -23,7 +23,6 @@ app.use(
 );
 
 app.use(cors({ origin: true, credentials: true }));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
